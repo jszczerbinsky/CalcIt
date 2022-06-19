@@ -221,18 +221,42 @@ int st_Update()
 			ans = 0;
 			break;
 		case 'p':
-			st_ProcessLastOperation(entryStr, &ans, &commaInserted, lastOperator);
-			mem += ans;
+			if(ansBackuped) 
+			{
+				mem += ansBackup;
+				ans = ansBackup;
+				clearAns = 1;
+				printAns = 1;
+			}
+			else mem += ans;
 			break;
 		case 'o':
-			st_ProcessLastOperation(entryStr, &ans, &commaInserted, lastOperator);
-			mem -= ans;
+			if(ansBackuped) 
+			{
+				mem -= ansBackup;
+				ans = ansBackup;
+				clearAns = 1;
+				printAns = 1;
+			}
+			else mem -= ans;
 			break;
 		case 'n':
 			mem = 0;	
+			if(ansBackuped) 
+			{
+				mem += ansBackup;
+				ans = ansBackup;
+				clearAns = 1;
+				printAns = 1;
+			}
 			break;
 		case 'm':
-			snprintf(entryStr, ENTRY_SIZE, "%0.10lf", mem);
+			ans = mem;
+			printAns = 1;
+			clearAns = 1;
+			free(expressionStr);
+			expressionStr = strdup("");
+			entryStr[0] = '\0';
 			break;
 		case 'q':
 			return RES_QUIT;
