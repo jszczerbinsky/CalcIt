@@ -64,6 +64,8 @@ int st_Update()
 	static double ans = 0;
 	static char lastOperator = '+';
 	static unsigned int printAns = 0;
+	static unsigned int clearAns = 0;
+	static double mem = 0;
 
 	if(!expressionStr) expressionStr = strdup("");
 
@@ -89,6 +91,17 @@ int st_Update()
 		printAns = 0;
 	}
 	else interfacePrintDisplay("Entry", entryStr, displayMarginSize, 1);
+
+	double ansBackup;
+	unsigned int ansBackuped = 0;
+
+	if(clearAns) 
+	{
+		ansBackup = ans;
+		ansBackuped = 1;
+		ans = 0;
+		clearAns = 0;
+	}
 
 	printf("\n\n");
 	/*
@@ -154,16 +167,28 @@ int st_Update()
 			}
 			else
 			{
-				if(!expressionStr || expressionStr[0] == '\0')
+				if(ansBackuped)
 				{
-					st_ExpressionPut(&expressionStr, "0 ");
+					ans = ansBackup;
+					st_ExpressionPut(&expressionStr, "Ans ");
 					char operatorStr[2] = { input, '\0' };
 					st_ExpressionPut(&expressionStr, operatorStr);
 					st_ExpressionPut(&expressionStr, " ");
+
 				}
 				else
-					expressionStr[strlen(expressionStr)-2] = input;
-			}
+				{
+					if(!expressionStr || expressionStr[0] == '\0')
+					{
+						st_ExpressionPut(&expressionStr, "0 ");
+						char operatorStr[2] = { input, '\0' };
+						st_ExpressionPut(&expressionStr, operatorStr);
+						st_ExpressionPut(&expressionStr, " ");
+					}
+					else
+						expressionStr[strlen(expressionStr)-2] = input;
+				}
+				}
 			lastOperator = input;
 			printAns = 1;
 			break;
@@ -172,18 +197,8 @@ int st_Update()
 			st_ProcessLastOperation(entryStr, &ans, &commaInserted, lastOperator);
 			free(expressionStr);
 			expressionStr = strdup("");
-			snprintf(entryStr, ENTRY_SIZE, "%0.10lf", ans);
-			for(int i = strlen(entryStr)-1; i >= 0; i--) 
-			{
-				if(entryStr[i] == '0') entryStr[i] = '\0';
-				else if(entryStr[i] == '.')
-				{
-					entryStr[i] = '\0';
-					break;
-				}
-				else break;
-			}
-			ans = 0;
+			printAns = 1;
+			clearAns = 1;
 			lastOperator = '+';
 			commaInserted = 0;
 			for(int i = 0; i < strlen(entryStr); i++)
@@ -204,6 +219,20 @@ int st_Update()
 			free(expressionStr);
 			expressionStr = strdup("");
 			ans = 0;
+			break;
+		case 'p':
+			st_ProcessLastOperation(entryStr, &ans, &commaInserted, lastOperator);
+			mem += ans;
+			break;
+		case 'o':
+			st_ProcessLastOperation(entryStr, &ans, &commaInserted, lastOperator);
+			mem -= ans;
+			break;
+		case 'n':
+			mem = 0;	
+			break;
+		case 'm':
+			snprintf(entryStr, ENTRY_SIZE, "%0.10lf", mem);
 			break;
 		case 'q':
 			return RES_QUIT;

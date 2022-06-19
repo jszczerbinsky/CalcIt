@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include "interface.h"
 #include "standard.h"
@@ -59,6 +60,7 @@ int interfaceQuitMB()
 
 void interfacePrintDisplay(char *title, char *str, int margin, int alignR)
 {
+	printf("\n");
 	printf("%*s┌%s", margin-1, "", title);
 	for(int i = 0; i < size.ws_col-margin*2-3-strlen(title); i++) printf("─");
 	printf("┐\n");
