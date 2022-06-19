@@ -121,6 +121,9 @@ void interfaceRun()
 	do
 	{
 		ioctl(0, TIOCGWINSZ, &size);
+		printf("\e[2J\e[H");
+		printf("\e[%d;%dHCalcIt - terminal calculator", size.ws_row-1, 0);
+		printf("\e[%d;%dH'?' - Help\e[H\n", size.ws_row-1, size.ws_col-10);
 
 		switch(st_Update())
 		{
@@ -128,7 +131,11 @@ void interfaceRun()
 				interfaceHelpMB();
 				break;
 			case RES_QUIT:
-				if(interfaceQuitMB()) return;
+				if(interfaceQuitMB()) 
+				{
+					printf("\e[2J\e[H");
+					return;
+				}
 				break;
 		}
 	}

@@ -72,7 +72,6 @@ int st_Update()
 	if(!expressionStr) expressionStr = strdup("");
 
 	int displayMarginSize = size.ws_col/10;
-	printf("\e[2J\e[H");
 
 	interfacePrintDisplay("Expression", expressionStr, displayMarginSize, 0);
 
