@@ -6,6 +6,38 @@
 
 struct winsize size;
 
+int interfaceHelpMB()
+{
+	const int width = 20;
+
+	int row = 3;
+
+	printf("\e[%d;%dH┌Help", row, size.ws_col/2-width/2);
+	for(int i = 0; i < width-3-4; i++) printf("─");
+	printf("┐\n");
+	row++;
+
+	for(int i = 0; i < sizeof(st_Help)/sizeof(char*); i++)
+	{
+		printf("\e[%d;%dH", row, size.ws_col/2-width/2);
+		printf("│%-*s│▒", width-3, st_Help[i]);
+		row++;
+	}
+
+	printf("\e[%d;%dH└", row, size.ws_col/2-width/2);
+	for(int i = 0; i < width-3; i++) printf("─");
+	printf("┘▒\n");
+	row++;
+
+	printf("\e[%d;%dH", row, size.ws_col/2-width/2+2);
+	for(int i = 0; i < width-2; i++) printf("▒");
+	printf("\n");
+
+	fflush(stdout);
+
+	getchar();
+}
+
 int interfaceQuitMB()
 {
 	const int width = 36;
@@ -92,6 +124,9 @@ void interfaceRun()
 
 		switch(st_Update())
 		{
+			case RES_HELP:
+				interfaceHelpMB();
+				break;
 			case RES_QUIT:
 				if(interfaceQuitMB()) return;
 				break;

@@ -5,15 +5,17 @@
 #include "interface.h"
 
 #define ENTRY_SIZE 1024
-#define HELP_ENTRY_WIDTH 20
+
+const char *st_Help[6] = {
+	"[C ] - c",
+	"[CE] - e",
+	"[M+] - p",
+	"[M-] - o",
+	"[MC] - n",
+	"[MR] - m",
+};
 
 extern struct winsize size;
-
-const char *st_Help[] = {
-	"c - Clear", 
-	"e - Clear entry",
-	"",
-};
 
 double st_ProcessEntry(char *str)
 {
@@ -103,29 +105,6 @@ int st_Update()
 		clearAns = 0;
 	}
 
-	printf("\n\n");
-	/*
-	printf("%*s+ - Add\n", displayMarginSize, "");
-	printf("%*s- - Subtract\n", displayMarginSize, "");
-	printf("%*s* - Multiply\n", displayMarginSize, "");
-	printf("%*s/ - Divide\n", displayMarginSize, "");
-	printf("%*sc - Clear\n", displayMarginSize, "");
-	printf("%*se - Clear entry\n", displayMarginSize, "");
-	*/
-
-	int helpEntryPerLine = (size.ws_col-displayMarginSize*2)/HELP_ENTRY_WIDTH;
-	int i = 0;
-
-	while(i < sizeof(st_Help)/sizeof(char*))
-	{
-		if(i%helpEntryPerLine == 0)
-			printf("%-*s", displayMarginSize, "");
-		printf("%-*s", HELP_ENTRY_WIDTH, st_Help[i]);
-		if(i%helpEntryPerLine == helpEntryPerLine-1) printf("\n");
-		i++;
-	}
-
-
 	fflush(stdout);
 			
 	char input = getchar();	
@@ -214,6 +193,7 @@ int st_Update()
 			break;
 		case 'c':
 			commaInserted = 0;
+			mem = 0;
 			entryStr[0] = '\0';
 			lastOperator = '+';
 			free(expressionStr);
@@ -242,13 +222,6 @@ int st_Update()
 			break;
 		case 'n':
 			mem = 0;	
-			if(ansBackuped) 
-			{
-				mem += ansBackup;
-				ans = ansBackup;
-				clearAns = 1;
-				printAns = 1;
-			}
 			break;
 		case 'm':
 			ans = mem;
@@ -257,6 +230,9 @@ int st_Update()
 			free(expressionStr);
 			expressionStr = strdup("");
 			entryStr[0] = '\0';
+			break;
+		case '?':
+			return RES_HELP;
 			break;
 		case 'q':
 			return RES_QUIT;
