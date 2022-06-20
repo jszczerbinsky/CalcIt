@@ -113,10 +113,11 @@ int st_Update()
 	if(input >= '0' && input <= '9')
 		strncat(entryStr, &input, 1);
 
+	int l;
 	switch(input)
 	{
 		case 127:
-			int l = strlen(entryStr);
+			l = strlen(entryStr);
 			if(l > 0)
 			{
 				if(entryStr[l-1] == '.') commaInserted = 0;
