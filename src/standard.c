@@ -202,6 +202,9 @@ int st_Update()
 			ans = 0;
 			break;
 		case 'p':
+			free(expressionStr);
+			expressionStr = strdup("");
+			entryStr[0] = '\0';
 			if(ansBackuped) 
 			{
 				mem += ansBackup;
@@ -212,6 +215,10 @@ int st_Update()
 			else mem += ans;
 			break;
 		case 'o':
+			free(expressionStr);
+			expressionStr = strdup("");
+			entryStr[0] = '\0';
+
 			if(ansBackuped) 
 			{
 				mem -= ansBackup;
