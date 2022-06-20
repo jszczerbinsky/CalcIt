@@ -104,6 +104,8 @@ int st_Update()
 		clearAns = 0;
 	}
 
+	printf("\e[H");
+
 	fflush(stdout);
 			
 	char input = getchar();	
